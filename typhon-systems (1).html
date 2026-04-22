@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Typhon Systems — Building a Safer Tomorrow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #07090d;
+  --deep: #0b0f17;
+  --panel: #10151f;
+  --panel2: #141b26;
+  --border: #1c2740;
+  --border2: #253348;
+  --blue: #1a8fff;
+  --blue-dim: #0d4e99;
+  --blue-glow: rgba(26,143,255,0.12);
+  --teal: #00d4c8;
+  --red: #ff2040;
+  --amber: #ffb020;
+  --text: #b8cde0;
+  --muted: #4e6880;
+  --white: #eaf2fb;
+  --mono: 'Share Tech Mono', monospace;
+  --display: 'Bebas Neue', sans-serif;
+  --body: 'Barlow', sans-serif;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--black); color: var(--text); font-family: var(--body); font-weight: 300; overflow-x: hidden; line-height: 1.6; }
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: linear-gradient(rgba(26,143,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(26,143,255,0.02) 1px, transparent 1px);
+  background-size: 64px 64px;
+  pointer-events: none; z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--blue) 30%, var(--teal) 70%, transparent 100%);
+  animation: scanline 12s linear infinite; pointer-events: none; z-index: 999; opacity: 0.35;
+}
+@keyframes scanline { from { top: -1px; } to { top: 100vh; } }
+
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5rem; height: 68px;
+  background: rgba(7,9,13,0.94);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+}
+.logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+.logo-icon { width: 38px; height: 38px; }
+.logo-text { font-family: var(--display); font-size: 20px; letter-spacing: 0.2em; color: var(--white); }
+.logo-text span { color: var(--blue); }
+.nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
+.nav-links a { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+.nav-links a:hover { color: var(--blue); }
+.nav-pill { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 9px 22px; background: var(--blue); color: var(--black); border: none; cursor: pointer; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); transition: background 0.2s; }
+.nav-pill:hover { background: #40aaff; }
+
+.hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 120px 5rem 100px; overflow: hidden; }
+.hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 90% 70% at 60% 40%, rgba(10,50,120,0.22) 0%, transparent 65%), radial-gradient(ellipse 50% 50% at 90% 80%, rgba(0,212,200,0.05) 0%, transparent 55%), radial-gradient(ellipse 30% 40% at 10% 20%, rgba(26,143,255,0.07) 0%, transparent 50%); }
+.hero-bracket-tl { position: absolute; top: 90px; left: 5rem; width: 80px; height: 80px; border-top: 1px solid var(--blue); border-left: 1px solid var(--blue); opacity: 0.35; }
+.hero-bracket-br { position: absolute; bottom: 90px; right: 5rem; width: 80px; height: 80px; border-bottom: 1px solid var(--blue); border-right: 1px solid var(--blue); opacity: 0.35; }
+.hero-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; color: var(--teal); text-transform: uppercase; margin-bottom: 1.5rem; opacity: 0; animation: fadeup 0.7s 0.2s forwards; }
+.hero-h1 { font-family: var(--display); font-size: clamp(62px, 8.5vw, 120px); line-height: 0.9; letter-spacing: 0.04em; color: var(--white); max-width: 14ch; opacity: 0; animation: fadeup 0.8s 0.4s forwards; }
+.hero-h1 em { font-style: normal; color: var(--blue); display: block; }
+.hero-h1 small { font-style: normal; color: var(--teal); display: block; font-size: 0.65em; }
+.hero-lead { font-size: 19px; font-weight: 300; line-height: 1.65; color: var(--muted); max-width: 560px; margin-top: 2.5rem; opacity: 0; animation: fadeup 0.7s 0.7s forwards; }
+.hero-lead strong { color: var(--text); font-weight: 400; }
+.hero-ctas { display: flex; align-items: center; gap: 2rem; margin-top: 3rem; opacity: 0; animation: fadeup 0.7s 0.9s forwards; }
+.btn-main { display: inline-flex; align-items: center; gap: 10px; padding: 14px 34px; background: var(--blue); color: var(--black); font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border: none; cursor: pointer; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px)); transition: background 0.2s, transform 0.15s; }
+.btn-main:hover { background: #40aaff; transform: translateY(-1px); }
+.btn-ghost { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: color 0.2s; }
+.btn-ghost:hover { color: var(--text); }
+.hero-numbers { position: absolute; right: 5rem; bottom: 100px; display: flex; gap: 3.5rem; opacity: 0; animation: fadeup 0.7s 1.1s forwards; }
+.hero-num { text-align: right; }
+.hero-num-val { font-family: var(--display); font-size: 48px; letter-spacing: 0.04em; color: var(--white); line-height: 1; }
+.hero-num-val span { color: var(--blue); font-size: 0.5em; }
+.hero-num-lbl { font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-top: 5px; }
+@keyframes fadeup { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+.mission-strip { background: var(--blue); padding: 22px 5rem; display: flex; align-items: center; gap: 2rem; }
+.mission-strip p { font-family: var(--body); font-size: 16px; font-weight: 400; color: var(--black); flex: 1; line-height: 1.5; }
+.mission-strip p strong { font-weight: 600; }
+.mission-divider { width: 1px; height: 36px; background: rgba(0,0,0,0.2); flex-shrink: 0; }
+.mstat .n { font-family: var(--display); font-size: 32px; color: var(--black); letter-spacing: 0.05em; line-height: 1; }
+.mstat .l { font-size: 11px; color: rgba(0,0,0,0.6); margin-top: 2px; white-space: nowrap; }
+
+section { position: relative; padding: 7rem 5rem; }
+.section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--blue); text-transform: uppercase; margin-bottom: 0.8rem; }
+.section-h2 { font-family: var(--display); font-size: clamp(36px, 4.5vw, 60px); letter-spacing: 0.04em; color: var(--white); line-height: 0.95; margin-bottom: 1.5rem; }
+.section-lead { font-size: 17px; font-weight: 300; color: var(--muted); line-height: 1.7; max-width: 580px; }
+.two-col-head { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: end; margin-bottom: 5rem; }
+
+.values { background: var(--deep); }
+.values-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); margin-top: 1px; }
+.value-card { background: var(--panel); padding: 2.5rem 2rem; border-top: 2px solid transparent; transition: border-color 0.3s, background 0.3s; }
+.value-card:hover { background: var(--panel2); border-color: var(--blue); }
+.value-icon { margin-bottom: 1.5rem; }
+.value-title { font-family: var(--display); font-size: 22px; letter-spacing: 0.08em; color: var(--white); margin-bottom: 0.75rem; }
+.value-text { font-size: 14px; font-weight: 300; color: var(--muted); line-height: 1.65; }
+
+.technology { background: var(--black); }
+.tech-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; margin-bottom: 5rem; }
+.tech-diagram { background: var(--panel); border: 1px solid var(--border); padding: 3rem; }
+.tdiag-title { font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; margin-bottom: 2rem; }
+.arch-layer { margin-bottom: 12px; }
+.arch-layer-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+.arch-layer-boxes { display: flex; gap: 6px; flex-wrap: wrap; }
+.arch-box { font-family: var(--mono); font-size: 9px; letter-spacing: 0.07em; text-transform: uppercase; padding: 6px 10px; border: 1px solid var(--border2); color: var(--text); background: var(--panel2); white-space: nowrap; }
+.arch-box.hl { border-color: var(--blue-dim); color: var(--blue); background: rgba(26,143,255,0.06); }
+.arch-box.tl { border-color: rgba(0,212,200,0.3); color: var(--teal); background: rgba(0,212,200,0.04); }
+.arch-arrow { text-align: center; font-family: var(--mono); font-size: 12px; color: var(--border2); margin: 6px 0; }
+.tech-stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); }
+.stack-card { background: var(--panel); padding: 2rem 1.75rem; }
+.stack-num { font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 1.5rem; }
+.stack-name { font-family: var(--display); font-size: 20px; letter-spacing: 0.1em; color: var(--white); margin-bottom: 0.5rem; }
+.stack-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; color: var(--teal); text-transform: uppercase; margin-bottom: 1rem; }
+.stack-text { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.6; }
+
+.products { background: var(--deep); }
+.products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); }
+.product-card { background: var(--panel); padding: 2.75rem 2.25rem; position: relative; overflow: hidden; transition: background 0.25s; }
+.product-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--border2); transition: background 0.25s; }
+.product-card:hover { background: var(--panel2); }
+.product-card:hover::after { background: var(--blue); }
+.product-card.accent::after { background: var(--red); }
+.product-num { font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 1.75rem; }
+.product-name { font-family: var(--display); font-size: 30px; letter-spacing: 0.08em; color: var(--white); margin-bottom: 0.3rem; }
+.product-class { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; color: var(--blue); text-transform: uppercase; margin-bottom: 1.25rem; }
+.product-desc { font-size: 14px; font-weight: 300; color: var(--muted); line-height: 1.65; margin-bottom: 1.75rem; }
+.product-features { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.product-features li { font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; color: var(--muted); display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
+.product-features li::before { content: '›'; color: var(--blue); flex-shrink: 0; margin-top: 1px; }
+
+.leadership { background: var(--black); }
+.leadership-intro { display: grid; grid-template-columns: 1fr 1.4fr; gap: 5rem; align-items: start; margin-bottom: 5rem; }
+.leadership-statement { font-size: 20px; font-weight: 300; line-height: 1.6; color: var(--text); font-style: italic; border-left: 2px solid var(--blue); padding-left: 2rem; margin-top: 2rem; }
+.founders-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); margin-bottom: 1px; }
+.founder-card { background: var(--panel2); padding: 3rem 2.5rem; }
+.founder-avatar { width: 68px; height: 68px; background: var(--panel); border: 1px solid var(--blue-dim); display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: 28px; color: var(--blue); margin-bottom: 1.5rem; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px)); }
+.founder-name { font-family: var(--display); font-size: 32px; letter-spacing: 0.06em; color: var(--white); }
+.founder-title { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; color: var(--teal); text-transform: uppercase; margin-bottom: 1.5rem; margin-top: 4px; }
+.founder-bio { font-size: 15px; font-weight: 300; color: var(--muted); line-height: 1.7; }
+.founder-bio + .founder-bio { margin-top: 0.75rem; }
+.team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); }
+.team-card { background: var(--panel); padding: 2.5rem 2rem; transition: background 0.25s; }
+.team-card:hover { background: var(--panel2); }
+.team-avatar { width: 56px; height: 56px; background: var(--panel2); border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: 22px; color: var(--blue); margin-bottom: 1.5rem; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); }
+.team-name { font-family: var(--display); font-size: 22px; letter-spacing: 0.06em; color: var(--white); margin-bottom: 0.25rem; line-height: 1.1; }
+.team-role { font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; color: var(--blue); text-transform: uppercase; margin-bottom: 1.25rem; }
+.team-bio { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.6; }
+.team-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 1.25rem; }
+.team-tag { font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 8px; border: 1px solid var(--border); color: var(--muted); }
+.ks-row { background: var(--border); margin-top: 1px; }
+.ks-card { background: var(--panel); padding: 2.5rem; }
+.ks-inner { display: flex; align-items: flex-start; gap: 2.5rem; }
+
+.partners { background: var(--deep); }
+.partners-intro-row { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: end; margin-bottom: 5rem; }
+.partner-tiers { display: flex; flex-direction: column; gap: 3rem; }
+.tier-title { font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; margin-bottom: 1rem; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.tier-logos { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.tier-logo { font-family: var(--display); font-size: 14px; letter-spacing: 0.16em; text-transform: uppercase; padding: 10px 18px; border: 1px solid var(--border); color: var(--muted); background: var(--panel); transition: border-color 0.2s, color 0.2s; }
+.tier-logo:hover { border-color: var(--blue-dim); color: var(--text); }
+.tier-logo.primary { border-color: var(--blue-dim); color: var(--blue); background: rgba(26,143,255,0.04); }
+.partner-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); margin-top: 4rem; }
+.partner-card { background: var(--panel); padding: 2rem 1.75rem; }
+.partner-name { font-family: var(--display); font-size: 18px; letter-spacing: 0.1em; color: var(--white); margin-bottom: 0.4rem; }
+.partner-type { font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; color: var(--blue); text-transform: uppercase; margin-bottom: 1rem; }
+.partner-desc { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.6; }
+
+.quote-band { background: var(--panel2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5rem; text-align: center; }
+.big-quote { font-family: var(--body); font-size: clamp(20px, 2.5vw, 28px); font-weight: 300; font-style: italic; color: var(--text); max-width: 800px; margin: 0 auto; line-height: 1.55; position: relative; }
+.big-quote::before { content: '"'; font-family: var(--display); font-size: 120px; color: var(--blue); opacity: 0.2; line-height: 0; position: absolute; top: 28px; left: -50px; }
+.quote-src { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; color: var(--muted); text-transform: uppercase; margin-top: 1.5rem; }
+
+.transparency { background: var(--black); }
+.trans-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 4rem; }
+.trans-card { border: 1px solid var(--border); padding: 2.5rem; }
+.trans-icon { width: 40px; height: 40px; margin-bottom: 1.5rem; }
+.trans-title { font-family: var(--display); font-size: 22px; letter-spacing: 0.08em; color: var(--white); margin-bottom: 0.75rem; }
+.trans-text { font-size: 14px; font-weight: 300; color: var(--muted); line-height: 1.65; }
+
+.news-section { background: var(--deep); }
+.news-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1px; background: var(--border); margin-top: 4rem; }
+.news-card { background: var(--panel); padding: 2.5rem 2rem; display: flex; flex-direction: column; }
+.news-date { font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; margin-bottom: 0.75rem; }
+.news-tag { display: inline-block; font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border: 1px solid var(--border2); color: var(--blue); margin-bottom: 1rem; }
+.news-hed { font-family: var(--display); font-size: 22px; letter-spacing: 0.06em; color: var(--white); line-height: 1.1; margin-bottom: 1rem; }
+.news-card.lead .news-hed { font-size: 26px; }
+.news-body { font-size: 14px; font-weight: 300; color: var(--muted); line-height: 1.6; flex: 1; }
+.news-more { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: var(--blue); text-transform: uppercase; margin-top: 1.5rem; text-decoration: none; display: flex; align-items: center; gap: 6px; }
+
+.ticker { background: rgba(26,143,255,0.07); border-top: 1px solid var(--blue-dim); border-bottom: 1px solid var(--blue-dim); padding: 10px 0; overflow: hidden; white-space: nowrap; }
+.ticker-inner { display: inline-block; animation: tick 32s linear infinite; }
+.ticker-item { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; color: var(--blue); text-transform: uppercase; padding: 0 3rem; }
+.ticker-item::before { content: '◆  '; font-size: 6px; }
+@keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+.footer-cta { background: var(--panel2); border-top: 1px solid var(--border); padding: 5rem; display: flex; align-items: center; justify-content: space-between; }
+.footer-cta-text .eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; color: var(--blue); text-transform: uppercase; margin-bottom: 0.8rem; }
+.footer-cta-text h3 { font-family: var(--display); font-size: 42px; letter-spacing: 0.05em; color: var(--white); line-height: 1; }
+.footer-cta-btns { display: flex; gap: 1.5rem; align-items: center; }
+footer { background: var(--black); border-top: 1px solid var(--border); padding: 2.5rem 5rem; display: flex; justify-content: space-between; align-items: center; }
+.footer-l { font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em; color: var(--muted); line-height: 2; }
+.footer-links { display: flex; gap: 2rem; list-style: none; }
+.footer-links a { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+.footer-links a:hover { color: var(--blue); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">
+    <svg class="logo-icon" viewBox="0 0 38 38" fill="none">
+      <polygon points="19,2 36,10.5 36,27.5 19,36 2,27.5 2,10.5" stroke="#1a8fff" stroke-width="1.5" fill="none"/>
+      <polygon points="19,9 29,14 29,24 19,29 9,24 9,14" stroke="#1a8fff" stroke-width="0.8" fill="none" opacity="0.35"/>
+      <line x1="19" y1="2" x2="19" y2="36" stroke="#1a8fff" stroke-width="0.4" opacity="0.25"/>
+      <line x1="2" y1="10.5" x2="36" y2="27.5" stroke="#1a8fff" stroke-width="0.4" opacity="0.25"/>
+      <line x1="36" y1="10.5" x2="2" y2="27.5" stroke="#1a8fff" stroke-width="0.4" opacity="0.25"/>
+      <circle cx="19" cy="19" r="3.5" fill="#1a8fff"/>
+      <circle cx="19" cy="19" r="6" stroke="#1a8fff" stroke-width="0.5" fill="none" opacity="0.4"/>
+    </svg>
+    <span class="logo-text">TYPHON <span>SYSTEMS</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#values">Our Mission</a></li>
+    <li><a href="#technology">Technology</a></li>
+    <li><a href="#products">Systems</a></li>
+    <li><a href="#leadership">Leadership</a></li>
+    <li><a href="#partners">Partners</a></li>
+    <li><a href="#news">News</a></li>
+  </ul>
+  <button class="nav-pill">Investor Relations</button>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-bracket-tl"></div>
+  <div class="hero-bracket-br"></div>
+  <div class="hero-eyebrow">Commonwealth of Britain · Est. 2009 · Public Safety Technology</div>
+  <h1 class="hero-h1">Safer.<em>Smarter.</em><small>Together.</small></h1>
+  <p class="hero-lead">Typhon Systems builds the analytical infrastructure that helps <strong>governments, police forces, and defence institutions</strong> protect the people they serve. We believe that the right technology, in the right hands, makes society safer for everyone.</p>
+  <div class="hero-ctas">
+    <a href="#products" class="btn-main">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><polygon points="0,1 9,5 0,9"/></svg>
+      Explore Our Systems
+    </a>
+    <a href="#values" class="btn-ghost">About Typhon →</a>
+  </div>
+  <div class="hero-numbers">
+    <div class="hero-num">
+      <div class="hero-num-val">47<span>+</span></div>
+      <div class="hero-num-lbl">Active Deployments</div>
+    </div>
+    <div class="hero-num">
+      <div class="hero-num-val">14</div>
+      <div class="hero-num-lbl">Partner Nations</div>
+    </div>
+    <div class="hero-num">
+      <div class="hero-num-val">2.4<span>M</span></div>
+      <div class="hero-num-lbl">Lives Safeguarded Daily</div>
+    </div>
+  </div>
+</section>
+
+<div class="mission-strip">
+  <p><strong>Typhon Systems is proud to be the Commonwealth's leading provider of public safety analytics.</strong> From frontline policing to national defence, our platforms are trusted by the institutions that keep Britain secure.</p>
+  <div class="mission-divider"></div>
+  <div class="mstat"><div class="n">£2.1B</div><div class="l">Public contracts awarded</div></div>
+  <div class="mission-divider"></div>
+  <div class="mstat"><div class="n">99.6%</div><div class="l">System uptime, 2015</div></div>
+  <div class="mission-divider"></div>
+  <div class="mstat"><div class="n">6yrs</div><div class="l">Serving the Commonwealth</div></div>
+</div>
+
+<section class="values" id="values">
+  <div class="two-col-head">
+    <div>
+      <div class="section-label">Who We Are</div>
+      <h2 class="section-h2">Technology in the<br>public interest</h2>
+    </div>
+    <p class="section-lead">We started Typhon with a simple conviction: that the tools available to those who protect the public should be at least as good as the tools available to those who threaten it. Six years on, that conviction drives everything we build.</p>
+  </div>
+  <div class="values-grid">
+    <div class="value-card">
+      <svg class="value-icon" width="36" height="36" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="14" stroke="#1a8fff" stroke-width="1"/><path d="M12 18 L16 22 L24 14" stroke="#1a8fff" stroke-width="1.5" fill="none"/></svg>
+      <div class="value-title">Human-Led</div>
+      <p class="value-text">Every Typhon system is designed to augment human judgement, not replace it. Our platforms present options and analysis. Decisions remain with trained, accountable professionals — always.</p>
+    </div>
+    <div class="value-card">
+      <svg class="value-icon" width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="8" y="8" width="20" height="20" stroke="#1a8fff" stroke-width="1"/><rect x="13" y="13" width="10" height="10" stroke="#1a8fff" stroke-width="0.8" fill="none" opacity="0.5"/><circle cx="18" cy="18" r="2" fill="#1a8fff"/></svg>
+      <div class="value-title">Transparent</div>
+      <p class="value-text">We publish annual transparency reports, cooperate fully with parliamentary oversight, and maintain detailed audit trails across all deployments. Our clients can always explain what our systems did and why.</p>
+    </div>
+    <div class="value-card">
+      <svg class="value-icon" width="36" height="36" viewBox="0 0 36 36" fill="none"><polygon points="18,4 32,12 32,24 18,32 4,24 4,12" stroke="#1a8fff" stroke-width="1" fill="none"/><polygon points="18,10 26,14 26,22 18,26 10,22 10,14" stroke="#1a8fff" stroke-width="0.8" fill="none" opacity="0.4"/></svg>
+      <div class="value-title">Resilient</div>
+      <p class="value-text">Critical infrastructure demands uncompromising reliability. Typhon systems are built for adversarial conditions — redundant architecture, hardened endpoints, and 24/7 operational support.</p>
+    </div>
+    <div class="value-card">
+      <svg class="value-icon" width="36" height="36" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="14" stroke="#1a8fff" stroke-width="1" stroke-dasharray="2 2"/><circle cx="18" cy="18" r="7" stroke="#1a8fff" stroke-width="1" fill="none"/><line x1="18" y1="4" x2="18" y2="11" stroke="#1a8fff" stroke-width="1"/><line x1="18" y1="25" x2="18" y2="32" stroke="#1a8fff" stroke-width="1"/><line x1="4" y1="18" x2="11" y2="18" stroke="#1a8fff" stroke-width="1"/><line x1="25" y1="18" x2="32" y2="18" stroke="#1a8fff" stroke-width="1"/></svg>
+      <div class="value-title">Accountable</div>
+      <p class="value-text">Every contract includes binding accountability clauses, mandatory human review protocols, and escalation pathways. We welcome scrutiny because we believe we have nothing to hide.</p>
+    </div>
+  </div>
+</section>
+
+<section class="technology" id="technology">
+  <div class="tech-intro">
+    <div>
+      <div class="section-label">How It Works</div>
+      <h2 class="section-h2">Advanced analytics.<br>Built for the real world.</h2>
+      <p class="section-lead" style="margin-bottom: 2rem;">Typhon's platform combines sensor integration, large-scale data correlation, and predictive modelling — delivered through interfaces designed for operators under pressure, not laboratory conditions.</p>
+      <p class="section-lead">We do not use the phrase "artificial intelligence" because we believe it obscures more than it reveals. What we build is <strong style="color: var(--text); font-weight: 400;">decision infrastructure</strong>: sophisticated analytical tooling that makes human experts faster, more consistent, and better informed.</p>
+    </div>
+    <div class="tech-diagram">
+      <div class="tdiag-title">// Typhon Platform Architecture — Overview</div>
+      <div class="arch-layer">
+        <div class="arch-layer-label">Data Ingestion</div>
+        <div class="arch-layer-boxes">
+          <div class="arch-box">Sensor Arrays</div>
+          <div class="arch-box">Comms Networks</div>
+          <div class="arch-box">Open Source Feeds</div>
+          <div class="arch-box">Classified Streams</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-layer">
+        <div class="arch-layer-label">Correlation Engine</div>
+        <div class="arch-layer-boxes">
+          <div class="arch-box hl">Pattern Recognition</div>
+          <div class="arch-box hl">Anomaly Detection</div>
+          <div class="arch-box hl">Temporal Modelling</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-layer">
+        <div class="arch-layer-label">Analytical Layer</div>
+        <div class="arch-layer-boxes">
+          <div class="arch-box hl">Scenario Modelling</div>
+          <div class="arch-box hl">Consequence Mapping</div>
+          <div class="arch-box hl">Probability Scoring</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-layer">
+        <div class="arch-layer-label">Operator Interface</div>
+        <div class="arch-layer-boxes">
+          <div class="arch-box tl">SENTINEL Dashboard</div>
+          <div class="arch-box tl">KINGFISHER Terminal</div>
+          <div class="arch-box tl">ORACLE Suite</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-layer">
+        <div class="arch-layer-label">Human Decision Point</div>
+        <div class="arch-layer-boxes">
+          <div class="arch-box" style="border-color: rgba(0,212,200,0.5); color: var(--teal); flex: 1; text-align: center;">Authorised Operator Action</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tech-stack">
+    <div class="stack-card">
+      <div class="stack-num">TECH-01</div>
+      <div class="stack-name">Multi-Source Fusion</div>
+      <div class="stack-sub">Data Integration Layer</div>
+      <p class="stack-text">Typhon's ingestion layer processes over 400 million discrete data points per hour across structured and unstructured sources — classified government feeds, commercial sensor networks, open-source intelligence, and aggregated behavioural data from partner organisations. All data is cryptographically isolated by jurisdiction and access tier.</p>
+    </div>
+    <div class="stack-card">
+      <div class="stack-num">TECH-02</div>
+      <div class="stack-name">Predictive Correlation</div>
+      <div class="stack-sub">Analytical Engine</div>
+      <p class="stack-text">Our proprietary correlation engine identifies statistically significant relationships across disparate data sources in near-real time. Rather than flagging individual events, the engine surfaces patterns — building an evolving operational picture that persists across shift changes, jurisdictions, and time zones.</p>
+    </div>
+    <div class="stack-card">
+      <div class="stack-num">TECH-03</div>
+      <div class="stack-name">Scenario Modelling</div>
+      <div class="stack-sub">Consequence Mapping</div>
+      <p class="stack-text">Given a set of current conditions, the modelling layer generates probabilistic scenario trees — presenting operators with likely trajectories, resource requirements, and intervention windows. All projections are time-stamped and logged for post-incident review and institutional learning.</p>
+    </div>
+    <div class="stack-card">
+      <div class="stack-num">TECH-04</div>
+      <div class="stack-name">Hardened Infrastructure</div>
+      <div class="stack-sub">Deployment &amp; Security</div>
+      <p class="stack-text">Typhon platforms are available in cloud, hybrid, and fully air-gapped configurations. Our secure enclaves meet NST Act 2013 requirements and are certified to COSMIC TOP SECRET handling standards. Penetration-tested quarterly by independent firms approved by the National Cyber Authority.</p>
+    </div>
+    <div class="stack-card">
+      <div class="stack-num">TECH-05</div>
+      <div class="stack-name">Audit &amp; Oversight</div>
+      <div class="stack-sub">Governance Framework</div>
+      <p class="stack-text">Every action taken within a Typhon deployment — every alert reviewed, every recommendation accepted or overridden — is logged to an immutable audit record. These records are available to oversight officers, parliamentary committees, and judicial processes in standardised, machine-readable formats.</p>
+    </div>
+    <div class="stack-card">
+      <div class="stack-num">TECH-06</div>
+      <div class="stack-name">Field Terminal</div>
+      <div class="stack-sub">Edge Deployment</div>
+      <p class="stack-text">The KINGFISHER terminal brings the full analytical stack to forward-deployed personnel. Ruggedised to MIL-STD-810G, operating in satellite and mesh-relay modes, with four-hour autonomous battery life and biometric operator authentication. Weighs 1.4kg. Deployed across seven specialist constabulary units nationwide.</p>
+    </div>
+  </div>
+</section>
+
+<section class="products" id="products">
+  <div class="two-col-head">
+    <div>
+      <div class="section-label">Product Systems</div>
+      <h2 class="section-h2">The full operational<br>platform</h2>
+    </div>
+    <p class="section-lead">Six integrated systems, each designed for a specific operational context — deployable independently or as a unified estate, with full interoperability across the Typhon product family.</p>
+  </div>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="product-num">SYS-01 / WIDE-AREA</div>
+      <div class="product-name">ARGUS</div>
+      <div class="product-class">Pattern Recognition Network</div>
+      <p class="product-desc">Continuous, city-scale intelligence fusion. ARGUS aggregates signals across sensor arrays, communications metadata, and open data streams to surface emerging patterns before they become incidents. The backbone of the national deployment, now active in 34 metropolitan areas.</p>
+      <ul class="product-features">
+        <li>Real-time multi-source correlation across 400M+ daily events</li>
+        <li>Configurable alert thresholds by operational tier</li>
+        <li>Classified network integration at SC and above</li>
+        <li>Full audit trail with operator attribution</li>
+      </ul>
+    </div>
+    <div class="product-card accent">
+      <div class="product-num">SYS-02 / FLAGSHIP SYSTEM</div>
+      <div class="product-name">SENTINEL</div>
+      <div class="product-class">Command Decision Platform</div>
+      <p class="product-desc">The primary interface for command-level officers. SENTINEL translates ARGUS data into a coherent operational picture, presenting scenario models, resource maps, and recommended intervention windows. Used by 34 constabularies and 3 defence commands across the Commonwealth.</p>
+      <ul class="product-features">
+        <li>Live scenario trees with probability weighting</li>
+        <li>Multi-agency coordination and tasking layer</li>
+        <li>Air-gapped and hybrid deployment certified</li>
+        <li>Shift-persistent situational awareness</li>
+      </ul>
+    </div>
+    <div class="product-card">
+      <div class="product-num">SYS-03 / PERSISTENT</div>
+      <div class="product-name">THORNFIELD</div>
+      <div class="product-class">Long-Duration Area Monitoring</div>
+      <p class="product-desc">Rolling 90-day surveillance and event correlation for defined zones. THORNFIELD builds a temporal picture of a location — establishing behavioural baselines and flagging deviations that may not register as individual incidents but form a meaningful pattern over time.</p>
+      <ul class="product-features">
+        <li>90-day rolling event archive with full indexing</li>
+        <li>Baseline deviation alerting, configurable sensitivity</li>
+        <li>Third-party sensor compatibility via open API</li>
+        <li>Jurisdiction-partitioned encrypted storage</li>
+      </ul>
+    </div>
+    <div class="product-card">
+      <div class="product-num">SYS-04 / MOBILE</div>
+      <div class="product-name">KINGFISHER</div>
+      <div class="product-class">Tactical Field Terminal</div>
+      <p class="product-desc">Compact, field-deployable intelligence terminal for specialist and rapid-response units. KINGFISHER delivers the SENTINEL analytical stack to forward-operating personnel with minimal infrastructure dependency — in any environment, at any hour.</p>
+      <ul class="product-features">
+        <li>MIL-STD-810G hardened, 1.4kg chassis</li>
+        <li>Satellite and mesh-relay network modes</li>
+        <li>Biometric operator authentication</li>
+        <li>4-hour autonomous operation, hot-swap battery</li>
+      </ul>
+    </div>
+    <div class="product-card">
+      <div class="product-num">SYS-05 / STRATEGIC</div>
+      <div class="product-name">ORACLE</div>
+      <div class="product-class">Long-Range Forecast Platform</div>
+      <p class="product-desc">Probabilistic analysis for policy, procurement, and strategic planning. ORACLE synthesises geopolitical, social, and economic indicators to stress-test institutional strategy against modelled future conditions — with scenario drilling from 12 to 48 months ahead.</p>
+      <ul class="product-features">
+        <li>12–48 month probabilistic projection models</li>
+        <li>Ministerial reporting templates (STRAP compatible)</li>
+        <li>Sensitivity analysis and red-team scenario mode</li>
+        <li>Secure inter-departmental distribution layer</li>
+      </ul>
+    </div>
+    <div class="product-card">
+      <div class="product-num">SYS-06 / GOVERNANCE</div>
+      <div class="product-name">CODEX</div>
+      <div class="product-class">Compliance &amp; Oversight Framework</div>
+      <p class="product-desc">End-to-end governance tooling for responsible deployment. CODEX provides legal compliance mapping, immutable audit logging, and parliamentary-grade reporting — ensuring that every Typhon deployment remains under meaningful human oversight at all times.</p>
+      <ul class="product-features">
+        <li>Automated decision audit logging — immutable record</li>
+        <li>NST Act 2013 statutory compliance mapping</li>
+        <li>Oversight officer real-time dashboard</li>
+        <li>Parliamentary Select Committee reporting templates</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">Typhon Systems — Authorised Supplier, Commonwealth Ministry of Defence 2015</span>
+    <span class="ticker-item">SENTINEL certified under National Security Technology Act 2013</span>
+    <span class="ticker-item">ARGUS-7 network live across all major metropolitan constabularies</span>
+    <span class="ticker-item">New: KINGFISHER Mk.II entering field trials — enhanced satellite relay, 6hr battery</span>
+    <span class="ticker-item">Typhon Systems ranked #1 public safety technology provider — Commonwealth Business Review 2015</span>
+    <span class="ticker-item">Typhon Systems — Authorised Supplier, Commonwealth Ministry of Defence 2015</span>
+    <span class="ticker-item">SENTINEL certified under National Security Technology Act 2013</span>
+    <span class="ticker-item">ARGUS-7 network live across all major metropolitan constabularies</span>
+    <span class="ticker-item">New: KINGFISHER Mk.II entering field trials — enhanced satellite relay, 6hr battery</span>
+    <span class="ticker-item">Typhon Systems ranked #1 public safety technology provider — Commonwealth Business Review 2015</span>
+  </div>
+</div>
+
+<section class="leadership" id="leadership">
+  <div class="leadership-intro">
+    <div>
+      <div class="section-label">Our People</div>
+      <h2 class="section-h2">Leadership with<br>public purpose</h2>
+    </div>
+    <div>
+      <p class="section-lead">Typhon was built by people who spent careers in public life — and who understand, from the inside, what it costs when institutions lack the tools to do their jobs. Our leadership brings together expertise in security, governance, technology, law, and finance.</p>
+      <p class="leadership-statement">"We are not a defence contractor in the traditional sense. We are a public safety company. The distinction matters enormously to us — and it shapes every product decision we make."</p>
+    </div>
+  </div>
+
+  <div class="founders-row">
+    <div class="founder-card">
+      <div class="founder-avatar">TB</div>
+      <div class="founder-name">Tony Blair</div>
+      <div class="founder-title">Chief Executive Officer &amp; Co-Founder</div>
+      <p class="founder-bio">Tony Blair co-founded Typhon Systems in 2009 following two decades of public service, including six years at the National Security Advisory Council. His conviction that government institutions deserve world-class analytical tooling drove the founding of Typhon and continues to shape its strategic direction.</p>
+      <p class="founder-bio">Under his leadership, Typhon has grown from a six-person team to the Commonwealth's primary public safety technology provider — active across 14 allied nations, with a platform trusted by police, military, and civil institutions alike.</p>
+      <div class="team-tags"><span class="team-tag">National Security</span><span class="team-tag">Defence Policy</span><span class="team-tag">Commonwealth Affairs</span><span class="team-tag">Strategic Leadership</span></div>
+    </div>
+    <div class="founder-card">
+      <div class="founder-avatar">AC</div>
+      <div class="founder-name">Alastair Campbell</div>
+      <div class="founder-title">Chief Operating Officer &amp; Co-Founder</div>
+      <p class="founder-bio">Alastair Campbell brings operational rigour and hard-won instinct to Typhon's leadership. His background spans senior advisory roles across three governments, crisis management at the highest levels, and sustained public sector reform work.</p>
+      <p class="founder-bio">At Typhon, Campbell oversees product delivery, client relationships, and institutional partnerships. His insistence on genuine human oversight — meaningful oversight, not box-ticking — has been foundational to how Typhon approaches every deployment it undertakes.</p>
+      <div class="team-tags"><span class="team-tag">Operations</span><span class="team-tag">Crisis Management</span><span class="team-tag">Institutional Reform</span><span class="team-tag">Stakeholder Relations</span></div>
+    </div>
+  </div>
+
+  <div class="team-grid" style="margin-top: 1px;">
+    <div class="team-card">
+      <div class="team-avatar">AK</div>
+      <div class="team-name">Alexander Kogan</div>
+      <div class="team-role">Chief Operations Director</div>
+      <p class="team-bio">Dr. Kogan leads Typhon's operational delivery — overseeing the engineering, deployment, and support teams responsible for 47 live systems across 14 countries. His background in applied behavioural analytics at Cambridge informs Typhon's data methodology and the design of the ARGUS correlation engine.</p>
+      <div class="team-tags"><span class="team-tag">Behavioural Analytics</span><span class="team-tag">Data Architecture</span><span class="team-tag">Operations</span></div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">EM</div>
+      <div class="team-name">Elon Musk</div>
+      <div class="team-role">Chief Technology Officer</div>
+      <p class="team-bio">Musk joined Typhon's executive team as CTO in 2012, bringing his experience scaling large-scale engineering programmes to the platform's hardware and infrastructure architecture. He oversees the ARGUS sensor network, the KINGFISHER hardware programme, and Typhon's long-term technical roadmap.</p>
+      <div class="team-tags"><span class="team-tag">Infrastructure</span><span class="team-tag">Hardware Engineering</span><span class="team-tag">Systems Architecture</span></div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">PM</div>
+      <div class="team-name">Peter Mandelson</div>
+      <div class="team-role">Co-Chief Financial Officer</div>
+      <p class="team-bio">Lord Mandelson oversees Typhon's institutional investment strategy and Commonwealth procurement framework relationships. His European institutional network has been central to Typhon's allied-nation expansion and cross-border contract structures across the partnership programme.</p>
+      <div class="team-tags"><span class="team-tag">Finance</span><span class="team-tag">Procurement</span><span class="team-tag">International Affairs</span></div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">DT</div>
+      <div class="team-name">Donald Trump</div>
+      <div class="team-role">Co-Chief Financial Officer</div>
+      <p class="team-bio">Mr. Trump leads Typhon's commercial finance and private capital relationships. He oversees the North Atlantic partner programme, managing strategic investment relationships across allied defence jurisdictions and coordinating Typhon's US-facing commercial and procurement strategy.</p>
+      <div class="team-tags"><span class="team-tag">Commercial Finance</span><span class="team-tag">Private Capital</span><span class="team-tag">North Atlantic</span></div>
+    </div>
+  </div>
+
+  <div class="ks-row">
+    <div class="ks-card">
+      <div class="ks-inner">
+        <div class="team-avatar" style="width:68px;height:68px;font-size:26px;flex-shrink:0;clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));">KS</div>
+        <div>
+          <div class="team-name" style="font-size:28px;">Keir Starmer</div>
+          <div class="team-role" style="margin-bottom:1.25rem;">General Counsel &amp; Chief Legal Officer</div>
+          <p class="team-bio" style="max-width: 760px; font-size: 14px;">Sir Keir Starmer leads Typhon's legal, compliance, and regulatory affairs function. A former Director of Public Prosecutions, Sir Keir brings unparalleled expertise in public law, human rights, and the legal frameworks governing state surveillance and enforcement powers. His role is to ensure that every Typhon deployment is legally sound, ethically defensible, and compliant with both domestic and international law. "The test I apply to every product we release is simple," Sir Keir has said. "Would I be comfortable explaining this to a court? If the answer is anything other than yes, we go back to the drawing board."</p>
+          <div class="team-tags" style="margin-top:1rem;"><span class="team-tag">Public Law</span><span class="team-tag">Human Rights</span><span class="team-tag">Regulatory Affairs</span><span class="team-tag">Compliance</span><span class="team-tag">Prosecutorial Law</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="partners" id="partners">
+  <div class="partners-intro-row">
+    <div>
+      <div class="section-label">Institutional Partners</div>
+      <h2 class="section-h2">Trusted by the<br>institutions that matter</h2>
+    </div>
+    <p class="section-lead">Typhon works exclusively with authorised government, law enforcement, and allied defence institutions. Our partnerships are governed by binding contractual frameworks, subject to parliamentary oversight, and reviewed annually by the National Security Technology Regulator.</p>
+  </div>
+
+  <div class="partner-tiers">
+    <div>
+      <div class="tier-title">Primary Commonwealth Partners</div>
+      <div class="tier-logos">
+        <div class="tier-logo primary">Ministry of Defence</div>
+        <div class="tier-logo primary">Home Office</div>
+        <div class="tier-logo primary">National Police Service</div>
+        <div class="tier-logo primary">GCHQ</div>
+        <div class="tier-logo primary">Border Authority</div>
+      </div>
+    </div>
+    <div>
+      <div class="tier-title">Allied Nation Partners</div>
+      <div class="tier-logos">
+        <div class="tier-logo">Dept. of Homeland Security (US)</div>
+        <div class="tier-logo">Australian Defence Force</div>
+        <div class="tier-logo">Canadian Security Intelligence</div>
+        <div class="tier-logo">NZ Police</div>
+        <div class="tier-logo">NATO Infrastructure Command</div>
+      </div>
+    </div>
+    <div>
+      <div class="tier-title">Technology &amp; Research Partners</div>
+      <div class="tier-logos">
+        <div class="tier-logo">Cambridge Cyber Lab</div>
+        <div class="tier-logo">Imperial Defence Research</div>
+        <div class="tier-logo">Defence Science &amp; Technology Lab</div>
+        <div class="tier-logo">Axiom Data Solutions</div>
+        <div class="tier-logo">Palantir Technologies</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="partner-cards">
+    <div class="partner-card">
+      <div class="partner-name">Ministry of Defence</div>
+      <div class="partner-type">Primary Strategic Partner · Since 2011</div>
+      <p class="partner-desc">Typhon's longest-standing institutional partner. The MoD's Defence Intelligence directorate uses SENTINEL and ORACLE as core platforms for strategic threat assessment and contingency planning. Typhon holds a ten-year sole-supplier agreement for the national command analytics estate, renewed and expanded in 2014.</p>
+    </div>
+    <div class="partner-card">
+      <div class="partner-name">National Police Service</div>
+      <div class="partner-type">Law Enforcement Partner · Since 2012</div>
+      <p class="partner-desc">ARGUS-7 is now the operational backbone of 34 Metropolitan and regional constabularies. The NPS partnership covers live deployment of ARGUS, THORNFIELD for persistent monitoring of designated areas, and KINGFISHER terminals for armed response units. Over 4,200 officers interact with Typhon interfaces daily.</p>
+    </div>
+    <div class="partner-card">
+      <div class="partner-name">Home Office</div>
+      <div class="partner-type">Civil Authority Partner · Since 2010</div>
+      <p class="partner-desc">The Home Office was Typhon's founding government client. The ORACLE platform was built in direct response to their requirements for long-range security scenario modelling. The partnership now extends to border management analytics, counter-radicalisation pattern detection, and national emergency response coordination infrastructure.</p>
+    </div>
+    <div class="partner-card">
+      <div class="partner-name">Axiom Data Solutions</div>
+      <div class="partner-type">Data Infrastructure Partner · Since 2013</div>
+      <p class="partner-desc">Axiom provides the commercial data infrastructure underpinning ARGUS's open-source intelligence layer — processing aggregated consumer, communications, and financial data to identify population-level patterns. All data is handled under the Commonwealth Data Sharing Agreement and processed under strict access controls before entering the Typhon platform.</p>
+    </div>
+    <div class="partner-card">
+      <div class="partner-name">Cambridge Cyber Lab</div>
+      <div class="partner-type">Research Partner · Since 2009</div>
+      <p class="partner-desc">Typhon's founding academic partnership. The CCL's applied behavioural analytics research — including Dr. Kogan's landmark 2011 work on large-scale pattern inference from aggregated social data — forms the theoretical basis for the ARGUS correlation engine. The partnership continues to produce peer-reviewed validation of Typhon's methodologies.</p>
+    </div>
+    <div class="partner-card">
+      <div class="partner-name">Palantir Technologies</div>
+      <div class="partner-type">Technology Partner · Since 2014</div>
+      <p class="partner-desc">Typhon and Palantir entered a strategic interoperability agreement in 2014, enabling Typhon's analytical layer to interface with Palantir's data integration platform across allied jurisdictions. This underpins the NATO Infrastructure Command deployment and enables cross-border intelligence sharing between Commonwealth and US partner agencies.</p>
+    </div>
+  </div>
+</section>
+
+<div class="quote-band">
+  <blockquote class="big-quote">The SENTINEL platform gave our command structure something it had never had before: a single, shared operational picture that persisted across shifts, divisions, and jurisdictions. The difference in response times alone justifies the investment many times over.</blockquote>
+  <div class="quote-src">— Senior Operational Commander, Metropolitan Constabulary · October 2015</div>
+</div>
+
+<section class="transparency" id="transparency">
+  <div class="two-col-head">
+    <div>
+      <div class="section-label">Our Commitments</div>
+      <h2 class="section-h2">Openness is not<br>optional for us</h2>
+    </div>
+    <p class="section-lead">We operate in spaces where public trust is everything. We do not take that trust for granted, and we believe the best way to earn it is to be consistently, verifiably transparent about what our systems do and how they are governed.</p>
+  </div>
+  <div class="trans-grid">
+    <div class="trans-card">
+      <svg class="trans-icon" viewBox="0 0 40 40" fill="none"><rect x="6" y="6" width="28" height="28" stroke="#1a8fff" stroke-width="1"/><line x1="6" y1="13" x2="34" y2="13" stroke="#1a8fff" stroke-width="0.6"/><line x1="10" y1="18" x2="30" y2="18" stroke="#1a8fff" stroke-width="0.6" opacity="0.5"/><line x1="10" y1="22" x2="28" y2="22" stroke="#1a8fff" stroke-width="0.6" opacity="0.5"/><line x1="10" y1="26" x2="24" y2="26" stroke="#1a8fff" stroke-width="0.6" opacity="0.5"/></svg>
+      <div class="trans-title">Annual Transparency Report</div>
+      <p class="trans-text">Every year, Typhon publishes a full account of system deployments, the volume and type of alerts generated, operator override rates, and any incidents involving disputed outputs. The 2014 report is available for download. The 2015 report will be published in February 2016.</p>
+    </div>
+    <div class="trans-card">
+      <svg class="trans-icon" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14" stroke="#1a8fff" stroke-width="1"/><path d="M14 20 L18 24 L26 16" stroke="#1a8fff" stroke-width="1.5" fill="none"/></svg>
+      <div class="trans-title">Parliamentary Oversight</div>
+      <p class="trans-text">Our government contracts require mandatory reporting to the relevant parliamentary committee for each jurisdiction. Our CLO, Sir Keir Starmer, appears before the Home Affairs Select Committee annually to answer questions on platform operations, data handling, and legal compliance.</p>
+    </div>
+    <div class="trans-card">
+      <svg class="trans-icon" viewBox="0 0 40 40" fill="none"><polygon points="20,4 36,12 36,28 20,36 4,28 4,12" stroke="#1a8fff" stroke-width="1" fill="none"/><line x1="20" y1="12" x2="20" y2="22" stroke="#1a8fff" stroke-width="1.5"/><circle cx="20" cy="26" r="1.5" fill="#1a8fff"/></svg>
+      <div class="trans-title">Independent Audit</div>
+      <p class="trans-text">All Typhon deployments are subject to annual independent audit by firms approved by the National Security Technology Regulator. Audit reports are submitted to the Regulator and, where operationally permissible, made available in summary form to the relevant parliamentary committee.</p>
+    </div>
+  </div>
+</section>
+
+<section class="news-section" id="news">
+  <div class="section-label">Latest</div>
+  <h2 class="section-h2" style="margin-bottom: 0;">News &amp; Updates</h2>
+  <div class="news-grid">
+    <div class="news-card lead">
+      <div class="news-date">14 October 2015</div>
+      <div class="news-tag">Announcement</div>
+      <div class="news-hed">Typhon Systems awarded expanded MoD analytics contract, valued at £340M over five years</div>
+      <p class="news-body">The Commonwealth Ministry of Defence has confirmed the renewal and expansion of its strategic analytics contract with Typhon Systems, extending the SENTINEL and ORACLE deployment across all four defence commands and incorporating a new THORNFIELD persistent monitoring layer for designated national infrastructure sites. The contract, valued at approximately £340 million over five years, represents the largest single government analytics award in the Commonwealth to date.</p>
+      <a href="#" class="news-more">Read more →</a>
+    </div>
+    <div class="news-card">
+      <div class="news-date">2 September 2015</div>
+      <div class="news-tag">Product</div>
+      <div class="news-hed">KINGFISHER Mk.II enters field trials with three specialist units</div>
+      <p class="news-body">The second-generation KINGFISHER tactical terminal has entered operational field trials. The Mk.II features a 6-hour autonomous battery, enhanced satellite relay, and a redesigned operator interface developed in direct collaboration with frontline officers.</p>
+      <a href="#" class="news-more">Read more →</a>
+    </div>
+    <div class="news-card">
+      <div class="news-date">18 August 2015</div>
+      <div class="news-tag">Transparency</div>
+      <div class="news-hed">Typhon publishes 2014 Annual Transparency Report</div>
+      <p class="news-body">Typhon Systems has released its Annual Transparency Report for 2014, covering all 39 active deployments, operator override rates, alert volume by tier, and the outcomes of three independent external audits.</p>
+      <a href="#" class="news-more">Read more →</a>
+    </div>
+  </div>
+</section>
+
+<div class="footer-cta">
+  <div class="footer-cta-text">
+    <div class="eyebrow">Work With Us</div>
+    <h3>Building safer institutions,<br>together.</h3>
+  </div>
+  <div class="footer-cta-btns">
+    <a href="#" class="btn-main">Investor Relations</a>
+    <a href="#" class="btn-ghost">Careers at Typhon →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-l">
+    © 2015 Typhon Systems Ltd — Registered in England and Wales, Commonwealth of Britain<br>
+    Company No. 06841293 · NST Act 2013 Authorised Supplier · VAT GB 192 4401 83
+  </div>
+  <ul class="footer-links">
+    <li><a href="#">Privacy Policy</a></li>
+    <li><a href="#">Legal</a></li>
+    <li><a href="#">Transparency</a></li>
+    <li><a href="#">Accessibility</a></li>
+    <li><a href="#">Press Office</a></li>
+    <li><a href="#">Whistleblowing</a></li>
+  </ul>
+</footer>
+
+</body>
+</html>
